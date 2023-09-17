@@ -15,6 +15,6 @@ export const ContactsApi = {
             },
         }),
 
-    editContact: (contact: ContactScheme) =>
+    editContact: (contact: Omit<ContactScheme, "userId">) =>
         $authHttp.post(`/api/contact/edit`, {contact}),
 };

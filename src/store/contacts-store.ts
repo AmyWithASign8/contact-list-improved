@@ -66,7 +66,7 @@ class ContactsStore {
         }
     };
 
-    editContact = async (contact: ContactScheme) => {
+    editContact = async (contact: Omit<ContactScheme, "userId">) => {
         try {
             const { data } = await ContactsApi.editContact(contact);
 

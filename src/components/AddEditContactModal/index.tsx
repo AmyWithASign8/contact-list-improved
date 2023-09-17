@@ -4,11 +4,11 @@ import {Controller, useForm} from "react-hook-form";
 interface ContactModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onSubmit: (contact?: ContactData & {id?:number}) => void;
+    onSubmit: (contact: ContactData & {id?:number}) => Promise<void>;
     isEditModal: boolean;
     contact?: ContactScheme | null;
 }
-interface ContactData {
+export interface ContactData {
     name: string;
     contact: string;
 }
@@ -21,10 +21,7 @@ const AddEditContactModal = ({isOpen, onClose, isEditModal, onSubmit, contact}:C
         reset();
     };
     return (
-        <Modal opened={isOpen} onClose={onClose}>
-            <Modal.Title>
-                {!isEditModal ? 'Добавить контакт' : 'Редактировать контакт'}
-            </Modal.Title>
+        <Modal opened={isOpen} onClose={onClose} title={!isEditModal ? 'Добавить контакт' : 'Редактировать контакт'}>
             <form onSubmit={handleSubmit(submitHandler)}>
                 <Controller
                     name="name"

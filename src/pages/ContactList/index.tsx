@@ -2,11 +2,11 @@ import ContactCard from "../../components/ContactCard";
 import {Button, Center, Container, Group, Stack, Title} from "@mantine/core";
 import {useEffect, useState} from "react";
 import {ContactScheme} from "../../types/contact.ts";
-import AddEditContactModal from "../../components/AddEditContactModal";
+import AddEditContactModal, {ContactData} from "../../components/AddEditContactModal";
 import {observer} from "mobx-react-lite";
 import ContactsStore from "../../store/contacts-store.ts";
 
-const ContactListPage = () => {
+const ContactListPage = observer(()  => {
     const [isAddModalOpen, setAddModalOpen] = useState(false);
     const [isEditModalOpen, setEditModalOpen] = useState(false);
     const {createContact, editContact, fetchContacts, contacts, deleteContact} = ContactsStore;
@@ -14,13 +14,13 @@ const ContactListPage = () => {
         fetchContacts()
     },[])
     const [currentContact, setCurrentContact] = useState<ContactScheme | null>(null);
-    const handleEditContact = async (contact?: ContactScheme) => {
-        if (!contact) return
-        await editContact(contact)
+    const handleEditContact = async (contact: ContactData & {id?:number}) => {
+        if (!contact || !contact.id) return
+        await editContact({...contact, id: contact!.id})
         setCurrentContact(null)
         setEditModalOpen(false)
     };
-    const handleCreateContact = async (contact?: ContactScheme) => {
+    const handleCreateContact = async (contact: ContactData) => {
         if (!contact) return
         await createContact(contact)
         setCurrentContact(null)
@@ -59,6 +59,6 @@ const ContactListPage = () => {
             </Container>
         </div>
     );
-};
+})
 
-export default observer(ContactListPage);
+export default ContactListPage;
