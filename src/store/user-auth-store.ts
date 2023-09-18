@@ -47,7 +47,7 @@ class AuthStore {
         } catch (e) {
                 showNotification({
                     title: "Ошибка сервера",
-                    message: "Попробуйте позже",
+                    message: "Возможно вы ввели неверные данные или попробуйте позже",
                     color: "red"
                 });
         }
@@ -69,7 +69,7 @@ class AuthStore {
         } catch (e) {
                 showNotification({
                     title: "Ошибка сервера",
-                    message: "Попробуйте позже",
+                    message: "Возможно пользователь с таким именем уже существует или попробуйте позже",
                     color: "red"
                 });
         }

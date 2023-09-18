@@ -5,26 +5,45 @@ import {ContactScheme} from "../../types/contact.ts";
 import AddEditContactModal, {ContactData} from "../../components/AddEditContactModal";
 import {observer} from "mobx-react-lite";
 import ContactsStore from "../../store/contacts-store.ts";
+import {notifications} from "@mantine/notifications";
+import AuthStore from '../../store/user-auth-store.ts'
 
 const ContactListPage = observer(()  => {
     const [isAddModalOpen, setAddModalOpen] = useState(false);
     const [isEditModalOpen, setEditModalOpen] = useState(false);
     const {createContact, editContact, fetchContacts, contacts, deleteContact} = ContactsStore;
+    const {logout} = AuthStore;
     useEffect(() => {
         fetchContacts()
     },[])
     const [currentContact, setCurrentContact] = useState<ContactScheme | null>(null);
     const handleEditContact = async (contact: ContactData & {id?:number}) => {
-        if (!contact || !contact.id) return
-        await editContact({...contact, id: contact!.id})
-        setCurrentContact(null)
-        setEditModalOpen(false)
+        try{
+            if (!contact || !contact.id) return
+            await editContact({...contact, id: contact!.id})
+            setCurrentContact(null)
+            setEditModalOpen(false)
+        }catch (e){
+            notifications.show({
+                title: 'Ошибка',
+                message: 'Ошибка при редактировании контакта!',
+                color: 'red'
+            })
+        }
     };
     const handleCreateContact = async (contact: ContactData) => {
-        if (!contact) return
-        await createContact(contact)
-        setCurrentContact(null)
-        setAddModalOpen(false)
+        try{
+            if (!contact) return
+            await createContact(contact)
+            setCurrentContact(null)
+            setAddModalOpen(false)
+        }catch (e) {
+            notifications.show({
+                title: 'Ошибка',
+                message: 'Ошибка при создании контакта!',
+                color: 'red'
+            })
+        }
     }
 
     const handleDeleteContact = async (contactId: number) => {
@@ -37,7 +56,10 @@ const ContactListPage = observer(()  => {
             <Container size={'xl'}>
                 <Group position={'apart'}>
                     <Title>Список контактов:</Title>
-                    <Button onClick={() => setAddModalOpen(true)} color={'green'}>Добавить контакт</Button>
+                    <Group>
+                        <Button onClick={() => setAddModalOpen(true)} color={'green'}>Добавить контакт</Button>
+                        <Button onClick={() => logout()} color={'red'}>Выйти</Button>
+                    </Group>
                 </Group>
                 {contacts.length !== 0
                     ?
