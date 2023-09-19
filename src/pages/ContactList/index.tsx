@@ -1,5 +1,5 @@
 import ContactCard from "../../components/ContactCard";
-import {Button, Center, Container, Group, Stack, Title} from "@mantine/core";
+import {Button, Center, Container, Group, Stack, Text, Title} from "@mantine/core";
 import {useEffect, useState} from "react";
 import {ContactScheme} from "../../types/contact.ts";
 import AddEditContactModal, {ContactData} from "../../components/AddEditContactModal";
@@ -7,6 +7,7 @@ import {observer} from "mobx-react-lite";
 import ContactsStore from "../../store/contacts-store.ts";
 import {notifications} from "@mantine/notifications";
 import AuthStore from '../../store/user-auth-store.ts'
+import {modals} from "@mantine/modals";
 
 const ContactListPage = observer(()  => {
     const [isAddModalOpen, setAddModalOpen] = useState(false);
@@ -47,7 +48,19 @@ const ContactListPage = observer(()  => {
     }
 
     const handleDeleteContact = async (contactId: number) => {
-        await deleteContact(contactId)
+        modals.openConfirmModal({
+            title: 'Удаление контакта',
+            centered: true,
+            children: (
+                <Text size="sm">
+                    Вы уверены что хотите удалить контакт?
+                </Text>
+            ),
+            labels: { confirm: 'Удалить', cancel: "Отмена" },
+            confirmProps: { color: 'red' },
+            onCancel: () => console.log('Cancel'),
+            onConfirm: () => deleteContact(contactId)
+        });
     }
     return (
         <div>
