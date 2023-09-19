@@ -62,6 +62,21 @@ const ContactListPage = observer(()  => {
             onConfirm: () => deleteContact(contactId)
         });
     }
+    const handleLogoutUser = () => {
+        modals.openConfirmModal({
+            title: 'Выход из аккаунта',
+            centered: true,
+            children: (
+                <Text size="sm">
+                    Вы уверены что хотите выйти из аккаунта?
+                </Text>
+            ),
+            labels: { confirm: 'Выйти', cancel: "Отмена" },
+            confirmProps: { color: 'red' },
+            onCancel: () => console.log('Cancel'),
+            onConfirm: () => logout()
+        });
+    }
     return (
         <div>
             <AddEditContactModal isOpen={isAddModalOpen} onClose={() => setAddModalOpen(false)} onSubmit={handleCreateContact} isEditModal={false}/>
@@ -71,7 +86,7 @@ const ContactListPage = observer(()  => {
                     <Title>Список контактов:</Title>
                     <Group>
                         <Button onClick={() => setAddModalOpen(true)} color={'green'}>Добавить контакт</Button>
-                        <Button onClick={() => logout()} color={'red'}>Выйти</Button>
+                        <Button onClick={handleLogoutUser} color={'red'}>Выйти</Button>
                     </Group>
                 </Group>
                 {contacts.length !== 0
